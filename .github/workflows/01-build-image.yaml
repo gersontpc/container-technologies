@@ -22,6 +22,17 @@ jobs:
       - name: List evidences
         run: ls -lha
 
+      - name: calculate version
+        id: calculate-version
+        uses: bitshifted/git-auto-semver@v1
+        with:
+          main_branch: master
+          create_tag: true
+          tag_prefix: 'tags'
+
+      - name: Use version
+        run: echo 'Calculated version:${{ steps.calculate-version.outputs.version-string }}'
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -33,25 +44,16 @@ jobs:
           context: .
           file: ./app/Dockerfile
           push: true
-          tags: '${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:${GITHUB_SHA:0:7}'
+          tags: '${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:${{ steps.calculate-version.outputs.version-string }}'
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:${GITHUB_SHA:0:7}'
+          image-ref: '${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:${{ steps.calculate-version.outputs.version-string }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
-      - name: calculate version
-        id: calculate-version
-        uses: bitshifted/git-auto-semver@v1
-        with:
-          main_branch: master
-          create_tag: true
-          tag_prefix: 'tags'
 
-      - name: Use version
-        run: echo 'Calculated version:${{ steps.calculate-version.outputs.version-string }}'
