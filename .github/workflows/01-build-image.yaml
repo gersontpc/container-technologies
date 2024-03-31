@@ -54,4 +54,4 @@ jobs:
           tag_prefix: 'tags'
 
       - name: Use version
-        run: echo "Calculated version: ${{ steps.calculate-version.outputs.version-string }}"
+        run: echo 'Calculated version:${{ steps.calculate-version.outputs.version-string }}'
