@@ -32,6 +32,15 @@ jobs:
         with:
           context: .
           file: ./app/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:latest
+          push: false
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:${GITHUB_SHA::7}
 
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:${GITHUB_SHA::7}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
