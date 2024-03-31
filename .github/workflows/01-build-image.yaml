@@ -33,7 +33,7 @@ jobs:
           context: .
           file: ./app/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:${GITHUB_SHA:0:7}
+          tags: '${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:${GITHUB_SHA:0:7}'
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
