@@ -40,9 +40,6 @@ jobs:
           push: false
           tags: '${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:v${{ steps.calculate-version.outputs.version-string }}'
 
-  trivy-scan:
-    runs-on: ubuntu-latest
-    steps:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
@@ -53,9 +50,6 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
-  push-image:
-    runs-on: ubuntu-latest
-    steps:
       - name: Push image to dockerhub
         uses: docker/build-push-action@v5
         env:
