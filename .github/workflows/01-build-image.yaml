@@ -34,7 +34,7 @@ jobs:
         run: ls -lha
 
       - name: Build an image from Dockerfile
-        working-directory: ../app
+        working-directory: app
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:v${{ steps.calculate-version.outputs.version-string }} .
 
