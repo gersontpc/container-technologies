@@ -56,23 +56,17 @@ jobs:
         run: |
           docker image push ${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:v${{ steps.calculate-version.outputs.version-string }}
 
-      - name: Auto PR
+      - name: Open Pull Request
         uses: devops-infra/action-pull-request@v0.5.5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          source_branch: main
-          target_branch: develop
-          title: My pull request
-          template: .github/PULL_REQUEST_TEMPLATE.md
-          body: "**Automated pull request**"
-          reviewer: octocat
-          assignee: octocat
-          label: enhancement
-          milestone: My milestone
-          draft: true
-          old_string: "<!-- Add your description here -->"
-          new_string: "** Automatic pull request**"
-          get_diff: true
-          ignore_users: "dependabot"
+          source_branch: develop
+          target_branch: main
+          title: Automatic Pull Request
+          body: "This is an automatic pull request from the develop branch."
+          labels: |
+            - enhancement
+            - auto-pr
+          draft: false
           allow_no_diff: false
 
