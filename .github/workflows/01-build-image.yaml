@@ -59,3 +59,24 @@ jobs:
           file: ./app/Dockerfile
           push: true
           tags: '${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:v${{ steps.calculate-version.outputs.version-string }}'
+
+      - name: Auto PR
+        uses: devops-infra/action-pull-request@v0.5.5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          source_branch: develop
+          target_branch: master
+          title: My pull request
+          template: .github/PULL_REQUEST_TEMPLATE.md
+          body: "**Automated pull request**"
+          reviewer: octocat
+          assignee: octocat
+          label: enhancement
+          milestone: My milestone
+          draft: true
+          old_string: "<!-- Add your description here -->"
+          new_string: "** Automatic pull request**"
+          get_diff: true
+          ignore_users: "dependabot"
+          allow_no_diff: false
+
