@@ -9,6 +9,9 @@ on:
 jobs:
   build-image:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,19 +37,10 @@ jobs:
         run: ls -lha
 
       - name: Build an image from Dockerfile
-        working-directory: app
+        env:
+          DOCKER_BUILDKIT: 1
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:v${{ steps.calculate-version.outputs.version-string }} .
-
-      # - name: Build image
-      #   uses: docker/build-push-action@v5
-      #   env:
-      #     DOCKER_BUILDKIT: 1
-      #   with:
-      #     context: .
-      #     file: ./app/Dockerfile
-      #     push: false
-      #     tags: '${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:v${{ steps.calculate-version.outputs.version-string }}'
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
@@ -58,15 +52,9 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
-      - name: Push image to dockerhub
-        uses: docker/build-push-action@v5
-        env:
-          DOCKER_BUILDKIT: 1
-        with:
-          context: .
-          file: ./app/Dockerfile
-          push: true
-          tags: '${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:v${{ steps.calculate-version.outputs.version-string }}'
+      - name: Push image
+        run: |
+          docker image push ${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:v${{ steps.calculate-version.outputs.version-string }}
 
       - name: Auto PR
         uses: devops-infra/action-pull-request@v0.5.5
