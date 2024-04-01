@@ -30,6 +30,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: List files
+        run: ls -lha
+
       - name: Build an image from Dockerfile
         working-directory: ../app
         run: |
