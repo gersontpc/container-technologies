@@ -59,5 +59,3 @@ jobs:
           file: ./app/Dockerfile
           push: true
           tags: '${{ secrets.DOCKERHUB_USERNAME }}/container-technologies:v${{ steps.calculate-version.outputs.version-string }}'
-
-
