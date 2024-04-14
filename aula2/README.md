@@ -1,6 +1,6 @@
 ## Aula 2 - Container Technologies
 
-### Exercicio 1 - Automatizando o processo de build
+### Exercicio 2 - Automatizando o processo de build
 
 Criar uma pipeline utilizando github actions, utilizando versionamento [semântico](https://semver.org/) de forma automatizada, build da imagem, scan de vulnerabilidades e push para o dockerhub.
 
@@ -156,5 +156,5 @@ git push origin
 
 ### Entregável
 
-Anexe o link do repositório do github actions no Classroom.
+Anexe o link do repositório do github actions no Classroom.  
 Exemplo: https://github.com/<user>/container-technologies/actions

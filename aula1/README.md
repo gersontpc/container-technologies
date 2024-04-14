@@ -1,6 +1,6 @@
-### Aula 1 - Container Technologies
+## Aula 1 - Container Technologies
 
-## Exercicio 1 - Docker image
+### Exercicio 1 - Docker image
 
 Realizar a contrução de uma imagem, conhecer alguns comandos comuns e realizar o push da imagem para o dockerhub.
 
@@ -199,6 +199,5 @@ Foi realizada a limpeza das imagens, contêiners parados, cache, networks e etc.
 
 ### Entregável
 
-Coloque o link do dockerhub da imagem após o push.
-
+Anexe o link do dockerhub da imagem após o push no Classroom.  
 Exemplo: https://hub.docker.com/r/<user>/container-technologies
