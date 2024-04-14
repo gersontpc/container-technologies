@@ -24,6 +24,7 @@ Selecione **Instance Type:** t3.small (2GiB RAM + 2vCPU)
 
 - **Network settings**  
 Selecione: **Secure Shell (SSH)**
+
 ![cloud9](img/cloud9-03.png)
 
 4. E por último clique em **Create**
@@ -31,6 +32,7 @@ Selecione: **Secure Shell (SSH)**
 ![cloud9](img/cloud9-04.png)
 
 5. Aguarde a criação do ambiente
+
 ![cloud9](img/cloud9-05.png)
 
 6. Enquanto cria o ambiente, vá no serviço EC2:
