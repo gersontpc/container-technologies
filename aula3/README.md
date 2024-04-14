@@ -60,7 +60,7 @@ Selecione: **Secure Shell (SSH)**
 
 ![cloud9](img/cloud9-11.png)
 
-12. Clonando o repositório da aula:
+12. Clonando o repositório da aula
 
 No terminal do Cloud9, execute o comando abaixo:
 
@@ -82,6 +82,7 @@ cd container-technologies/aula3/
 ```shell
 docker compose up -d
 ```
+![cloud9](img/compose-01.png)
 
 Conteúdo do **compose.yaml**:
 ```
@@ -134,9 +135,92 @@ networks:
     driver: bridge
 
 ```
-3. Após subir a stack do wordpress, acesse o
+3. Após subir a stack do wordpress, execute o comando abaixo
 
-3. Setando os limites dos contêineres:
+```shell
+sudo snap install jq
+```
+```shell
+URL="http://$(aws ec2 describe-instances --instance-ids $(wget -qO- http://169.254.169.254/latest/meta-data/instance-id) | jq -r '.Reservations[].Instances[] | .PublicIpAddress'):8080" echo $URL
+```
+Output:
+```shellscript
+http://44.192.106.213:8080
+```
+
+4. Clique na URL para abrir o frontend do wordpress
+
+Selecione **Português do Brasil** e clique em **Continuar**
+
+![cloud9](img/wordpress-01.png)
+
+5. Preencha a tela de boas vindas  
+**Título do site:** container-technologies  
+**Nome do usuário:** wpuser  
+**O seu e-mail:** seu e-mail da faculdade <gerson.carneiro@aluno.faculdadeimpacta.com.br>  
+Em seguida clique em **Instalar Wordpress:**
+
+![cloud9](img/wordpress-02.png)
+
+6. Na tela de login coloque o usuário *wpuser* e a senha gerada.
+
+**Nome de usuário ou endereço de e-mail:** wpuser  
+**Senha:** `fn6x@N)SIgRT$o!17T`  
+![cloud9](img/wordpress-03.png)
+
+7. Ao acessar o console de administração do wordpress, no canto superior esquerdo, clique em **container-technologies**
+
+![cloud9](img/wordpress-04.png)
+
+8. Pronto! Site do wordpress criado com sucesso!
+
+![cloud9](img/wordpress-05.png)
+
+9. Agora vamos definir os limites dos contêineres do nosso serviço, executando o comando abaixo
+
+```shell
+docker compose -f compose-limits.yml up -d
+```
+10. Vamos escalar as réplicas dos contêineres do mysql
+
+```shell
+docker compose scale mysql=3
+```
+
+Output:
+```shell
+[+] Running 3/3
+ ✔ Container aula3-mysql-3  Started            0.1s  
+ ✔ Container aula3-mysql-1  Started            0.5s   
+ ✔ Container aula3-mysql-2  Started            0.1s 
+```
+
+11. Liste os contêineres dos serviços
+
+```shell
+docker compose ps
+```
+
+Output:
+```output
+NAME                IMAGE              COMMAND                  SERVICE     CREATED              STATUS                                  PORTS
+aula3-mysql-1       mariadb:latest     "docker-entrypoint.s…"   mysql       About a minute ago   Restarting (1) Less than a second ago   
+aula3-mysql-2       mariadb:latest     "docker-entrypoint.s…"   mysql       About a minute ago   Restarting (1) Less than a second ago   
+aula3-mysql-3       mariadb:latest     "docker-entrypoint.s…"   mysql       About a minute ago   Up About a minute                       3306/tcp
+aula3-wordpress-1   wordpress:latest   "docker-entrypoint.s…"   wordpress   2 minutes ago        Up 2 minutes                            0.0.0.0:8080->80/tcp, :::8080->80/tcp
+```
+
+12. Setando os limites dos contêineres:
+
+```shell
+docker compose -f compose-limits.yml up -d
+WARN[0000] /home/ubuntu/environment/container-technologies/aula3/compose-limits.yml: `version` is obsolete 
+[+] Running 2/3
+ ⠧ Network aula3_wordpress      Created          0.8s 
+ ✔ Container aula3-mysql-1      Started          0.3s 
+ ✔ Container aula3-wordpress-1  Started          0.6s 
+```
+Conteúdo do **compose-limits.yaml**
 
 ```docker-compose
 version: "3.8"
@@ -202,4 +286,26 @@ networks:
     driver: bridge
 ```
 
-### Exercício 4 - Cluster Docker Swarm
+13. Limpando o ambiente
+
+Execute os comandos:
+```shell
+docker compose -f compose-limits.yml down
+```
+
+```shell
+docker system prune -a
+````
+Output: (pressione a tecla: y)
+
+```output
+WARNING! This will remove:
+  - all stopped containers
+  - all networks not used by at least one container
+  - all images without at least one container associated to them
+  - all build cache
+
+Are you sure you want to continue? [y/N] y
+```
+
+14. Laboratório concluído com sucesso!
