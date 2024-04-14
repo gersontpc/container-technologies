@@ -25,7 +25,7 @@ Selecione **Instance Type:** t3.small (2GiB RAM + 2vCPU)
 - **Network settings**  
 Selecione: **Secure Shell (SSH)**
 
-![cloud9](img/cloud9-03.png)
+![cloud9](img/cloud9-02.png)
 
 4. E por último clique em **Create**
 
