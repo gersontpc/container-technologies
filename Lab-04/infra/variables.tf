@@ -1,17 +1,14 @@
-module "ec2_instance" {
-  source = "terraform-aws-modules/ec2-instance/aws"
+variable "aws_region" {
+  description = "AWS region on which we will setup the swarm cluster"
+  default     = "us-east-1"
+}
 
-  for_each = toset(["master", "worker-01", "worker-02"])
+variable "instance_type" {
+  description = "Instance type"
+  default     = "t2.micro"
+}
 
-  name = "cluster-swarm-${each.key}"
-
-  instance_type          = "t2.micro"
-  monitoring             = true
-  vpc_security_group_ids = ["sg-0801507e2980afcb0"]
-  subnet_id              = "subnet-07a60f5768a99d4a7"
-
-  tags = {
-    Terraform   = "true"
-    Environment = "dev"
-  }
+variable "vpc_id" {
+  type        = string
+  description = "Insert your VPC ID"
 }
