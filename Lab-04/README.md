@@ -1,5 +1,10 @@
 ## Aula 4 - Docker Swarm
 
+## Neste laboratório iremos automatizar a instalação e configuração de um Cluster Swarm.
+
+Arquitetura:
+![swarm](img/swarm-08.png)
+
 ## Provisionando um Cluster Swarm na AWS
 
 1. Acesse o Cloud9, no terminal clone o repositório da disciplina:
