@@ -7,7 +7,7 @@ resource "aws_instance" "manager" {
   vpc_security_group_ids = ["${aws_security_group.swarm.id}"]
 
   tags = {
-    Name = "swarm-manager-${count.index}"
+    Name = "swarm-manager-0${count.index}"
   }
 }
 
