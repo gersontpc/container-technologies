@@ -37,7 +37,16 @@ vpc_id = "vpc-07c02b093d5189367"
 
 5. após realizar o vpc iremos executar o comando `terraform init` para baixar os plugins.
 
+```shell
+terraform init
+```
+
 Na sequência execute `terraform plan` e `terraform apply --auto-approve`
+
+```shell
+terraform plan
+terraform apply --auto-approve
+```
 
 Output:
 ```shell
@@ -67,10 +76,16 @@ Outputs:
 
 mamager_public_ip = [
   [
+    "3.89.121.237",
+  ],
+]
+
+mamager_private_ip = [
+  [
     "172.31.24.82",
   ],
 ]
-nodes_public_ip = [
+nodes_private_ip = [
   [
     "172.31.27.66",
     "172.31.86.208",
@@ -83,6 +98,8 @@ nodes_public_ip = [
 ![swarm](img/swarm-01.png)
 
 7. No outputs do terraform terá o `mamager_public_ip` e `nodes_public_ip`, copie esses IPs e cole no arquivo: `ansible/hosts`, conforme abaixo:
+
+Colocar os IPs conforme abaixo:
 
 ```ansible
 [masters]
@@ -156,6 +173,12 @@ avjngQKBgQCPC5kO3JKZGQuC0gcENkilZYw2Rsr1h7oE20qppU7HmpvjFwsg/Uv4
 ytLt7PbCqlHQiHciSzo7oI7noupoiiq0/SjRNQGezFgpUPICQLNouRi+tMhcbRMy
 Nxro55/2tDvnFo868MryxC1Dtpbbm7aztXueRVzE+sYx4mlOQfQhZA==
 -----END RSA PRIVATE KEY-----
+```
+
+Altere a permissão do arquivo que acabamos de criar
+
+```shell
+chmod 400 ~/.ssh/id_rsa
 ```
 
 11. Salve o arquivo e saia, digitando: `ESC` + `wq`
@@ -247,7 +270,8 @@ wuy3t64bt1ntd35kwybbiuzux     ip-172-31-86-208   Ready     Active               
 15. Fazendo o deploy do `Portainer` para conseguir visualizar o ambiente atrevés de UI.
 
 
-```compose
+```shell
+cat <<'EOF' >> portainer-agent-stack.yml
 version: '3.2'
 
 services:
@@ -287,8 +311,115 @@ networks:
 
 volumes:
   portainer_data:
+EOF
 ```
+
+16. Agora realize o deploy da stack do Portainer
 
 ```shell
 docker stack deploy -c portainer-agent-stack.yml portainer
 ```
+
+17. Listando as Stacks dentro do cluster
+
+```shell
+docker stack ls
+```
+
+18. Listando os serviços dentro do cluster
+
+```shell
+docker service ls
+```
+
+19. Agora vamos acessar o frontend do Portainer
+
+No Outputs do Terraform, ele também lista o ip público:
+
+```shell
+mamager_public_ip = [
+  [
+    "3.89.121.237",
+  ],
+]
+```
+
+Copie o IP e cole no seu browser:
+
+http://3.89.121.237:9000
+
+20. Ao colar este IP, ele irá carregar o frontend do Portainer
+
+Em `Username` deixe o usuário `admin`  
+Em `Password` coloque a senha: `012345678910` e `Confirme password` com a mesma senha  
+Na sequência clique em `Create user`.
+
+![swarm](img/swarm-05.png)
+
+21. Navegue no frontend do portainer:
+
+![swarm](img/swarm-06.png)
+
+22. Crie uma stack com a sua imagem feita em sala de aula com o `2048`:
+
+
+```shell
+cat <<'EOF' > 2048-stack.yml
+version: "3.9"
+
+services:
+  container-technologies:
+    image: gersontpc/container-technologies:v1.0.0
+    restart: always
+    ports:
+      - "8080:80"
+    networks:
+      - agent_network
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+
+networks:
+  agent_network:
+    driver: overlay
+    attachable: true
+EOF
+```
+
+21. Realize o deploy da stack do 2048
+
+```shell
+docker stack deploy -c 2048-stack.yml 2048
+```
+
+22. Acesse o 2048 através do seu browser
+
+http://3.89.121.237:8080/
+
+![swarm](img/swarm-07.png)
+
+23. Pratique os comandos que foi passado na apresentação! :)
+
+24. E por ultimo vamos limpar a casa:
+
+
+Remova as stacks que foram realziados o Deploy:
+
+```shell
+docker stack rm portainer 2048
+```
+
+Pressione a tecla `CTRL` + `D` para deslogar do servidor.
+
+Destrua o ambiente utilizando o terraform:
+
+```shell
+cd ~/environment/container-technologies/Lab-04/infra/
+terraform destroy --auto-approve
+```
+
+-----
+
+É isso pessoal! Espero que tenha curtido a aula! :)
