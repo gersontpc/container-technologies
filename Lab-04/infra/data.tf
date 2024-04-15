@@ -1,16 +1,17 @@
 data "aws_ami" "ubuntu" {
   most_recent = true
-  owners      = ["679593333241"]
 
   filter {
     name   = "name"
-    values = ["ubuntu-minimal/images/hvm-ssd/ubuntu-focal-20.04-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
   }
 
   filter {
     name   = "virtualization-type"
     values = ["hvm"]
   }
+
+  owners = ["099720109477"] # Canonical
 }
 
 # Amazon Linux 2 Images: https://docs.aws.amazon.com/linux/al2023/ug/ec2.html
