@@ -1,14 +1,9 @@
 #!/bin/sh
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+sudo echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get update
-sudo apt-get install apt-transport-https ca-certificates
-sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-sudo sh -c 'echo \"deb https://apt.dockerproject.org/repo ubuntu-trusty main\" > /etc/apt/sources.list.d/docker.list'
-sudo apt-get update
-sudo apt-get install -y docker-engine=1.12.0-0~trusty
-sudo docker swarm init
-sudo docker swarm join-token --quiet worker > /home/ubuntu/token
-
-# yum update
-# yum install -y docker
-# service docker start
-# usermod -aG docker ec2-user
+sudo apt install docker-ce -y
+sudo systemctl enable docker
+sudo systemctl start docker
