@@ -175,7 +175,8 @@ O que está faltando provisionar?
 ### Provisionando os Nodes Groups
 
 17. Faltou provisionarmos o nosso <b>Node Group</b>, para provisionar, em [cluster EKS](https://us-east-1.console.aws.amazon.com/eks/home?region=us-east-1#/clusters/eks-lab) clique em <b>Compute</b> e logo na sequência clique em <b>Add node group</b>.
-![nginx](img/12.png)
+
+![](img/12.png)
 
 18. Adiciono o nome `eks-lab-node-group` e selecione o IAM role `LabRole` e clique em <b>Next</b>.
 
