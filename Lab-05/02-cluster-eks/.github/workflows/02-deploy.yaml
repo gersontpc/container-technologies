@@ -20,6 +20,18 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ steps.creds.outputs.aws-session-token }}
+          aws-session-token: ${{ steps.AWS_SESSION_TOKEN }}
           aws-region: ${{env.AWS_REGION}}
 
+      - name: Update context kubectl
+        run: aws eks update-kubeconfig --region us-east-1 --name eks-lab
+
+      - name: List all pods
+        uses: actions-hub/kubectl@master
+        with:
+          args: get pods -A
+
+      - name: Deploy application
+        uses: actions-hub/kubectl@master
+        with:
+          args: create -f app.yaml
