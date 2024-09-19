@@ -71,7 +71,7 @@ vim Dockerfile
 9. Colocar o conteúdo no arquivo
 ```shell
 FROM nginx:latest
-MAINTAINER <e-mail impacta>
+LABEL MAINTAINER="<e-mail impacta>"
 COPY index.html /usr/share/nginx/html/
 EXPOSE 80
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
@@ -83,7 +83,7 @@ ESC:wq
 ```
 11. Após salvar o arquivo, iremos criar o arquivo `index.html`
 ```shell
-echo "Container Technologies - Aula 1" > index.html
+echo "Container Technologies - LAB 01" > index.html
 ```
 12. Realize o build da imagem
 
