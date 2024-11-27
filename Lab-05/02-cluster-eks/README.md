@@ -135,9 +135,9 @@ source <(kubectl completion bash)
 cat <<'EOF' >> ~/.bashrc
 
 # Enable alias and autocomplete
-echo "source <(kubectl completion bash)"
-echo "alias k=kubectl"
-echo "complete -o default -F __start_kubectl k"
+source <(kubectl completion bash)
+alias k="kubectl"
+complete -o default -F __start_kubectl k
 
 EOF
 

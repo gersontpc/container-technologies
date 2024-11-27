@@ -32,15 +32,93 @@ tfenv use latest
 terraform --version
 ```
 
-4. Crie o arquivo `terraform.tfvars` para passar o valor das variáveis obrigatórias
+4. No arquivo `terraform.tfvars` preencha o `vpc_id`.
 
-no conteúdo do arquivo, adicione o VPC ID:
 
 ```tfvars
 vpc_id = "vpc-07c02b093d5189367"
 ```
 
-5. após realizar o vpc iremos executar o comando `terraform init` para baixar os plugins.
+5. Crie uma chave SSH para serem utilizadas nas EC2 que iremos provisionar para os NÓS do cluster.
+
+
+```
+ssh-keygen
+
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/ubuntu/.ssh/id_rsa): [PRESSIONE ENTER]
+/home/ubuntu/.ssh/id_rsa already exists.
+Overwrite (y/n)? [PRESSIONE y + ENTER]
+Enter passphrase (empty for no passphrase): [PRESSIONE ENTER]
+Enter same passphrase again: [PRESSIONE ENTER]
+Your identification has been saved in /home/ubuntu/.ssh/id_rsa
+Your public key has been saved in /home/ubuntu/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:KSgMEfSgskfSXwx6IQva0v7iDXKtRXXnPUrBzd1H6QU ubuntu@ip-172-31-94-206
+The key's randomart image is:
++---[RSA 3072]----+
+|=+. o         E.o|
+|o*o+ +   . o . +.|
+|B B.. + . + o o +|
+|.O o + . + o   ..|
+|. = + . S o o    |
+| . =   . . . .   |
+|. + +     .      |
+| + *             |
+|  o .            |
++----[SHA256]-----+
+```
+
+6. Altere a permissão do arquivo da chave que acabamos de criar
+```shell
+chmod 400 ~/.ssh/id_rsa
+```
+
+7. Copie a Chave SSH
+```bash
+cat ~/.ssh/id_rsa.pub
+```
+
+87. Copie o conteúdo:
+
+```
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDStIjMoI0ot+1VwlR2DyI71hr9IIXLq+BuC+2k/Cb4JwT2CezAfUot0Bo+xzNqDwv7mOpGF99OdHoFw1ANMoH1xLLZ/dao7OFyboMrAtODFjGjCN7d00NAovtPeRlHbvw/IFHXme71YwB5vd4q0TflEc8ImUrSkYSojhyLvY1+4ck5dwvjs5h+CYylGZ3JoQsGeHAf9f8CbljtsTyGv+N5ibsG6qmyiA26KhOnr4X4XmLTnyTci8No8DOFMcR24R80AXZS1uRwKnpmhhFdj86t7FaF0TuchCc9cblkW9m0d3y/jzHUrSkw3289fpQeudEXa437wdVv250nR54jaustQ63VG4g0GBL7Lj53F972Odg1Kp1XJ3GV8aoHUluxNLwrEMG8QZ1Fezpj+9OjkYcnt7hY0A8D577KjFRCecY6T4sFQcNHrpMHEuAZeT/an5qVHX0ubpggXhDIfV2ddxkxBDtsVicco+Q1JNS5h9k67l6SZfq+35qJBgJ9K8/CGmk= ubuntu@ip-172-31-94-206
+```
+
+9. Vá no Console da AWS
+
+Clique em [EC2] > [Key Pairs] > [Actions] > [Import key pair]
+
+Em nome coloque: `lab-04`  
+No campo abaixo de `key pair file`  
+Cole a chave pública.
+
+![ssh_key](img/ssh_key.png)
+
+Agora iremos importar as credenciais da AWS.
+
+10. Vá até a página do Lab e clique em [i] AWS Details na sequência clique em Show.
+
+![ssh_key](img/aws_credentials-01.png)
+
+11. Copie as credenciais.
+![ssh_key](img/aws_credentials-02.png)
+
+12. Cole insira conforme o comando abaixo:
+
+cat <<'EOF' > ~/.aws/credentials
+
+[default]
+aws_access_key_id=ASIAST7WWWYCJBLLRJ5NR
+aws_secret_access_key=L4sygxmWWWWWBuVKxpl/rl9ABAgZTTVeSa3+L5+
+aws_session_token=IQoJb3JpZ2luX2VjEJddddeediushpfbkWWWWWWWIPNEnekj...o440GqmBrElblUh4J2qcEYhYGyW
+
+EOF
+
+13. Cole no terminal e pressione [ENTER]
+
+
+14. Agora iremos `terraform init` para baixar os plugins.
 
 ```shell
 terraform init
@@ -55,54 +133,48 @@ terraform apply --auto-approve
 
 Output:
 ```shell
-...
-aws_security_group.swarm: Creating...
-aws_security_group.swarm: Creation complete after 3s [id=sg-05d21b5bc730ff8cd]
-aws_instance.manager[0]: Creating...
-aws_instance.nodes[0]: Creating...
-aws_instance.nodes[1]: Creating...
-aws_instance.manager[0]: Still creating... [10s elapsed]
-aws_instance.nodes[0]: Still creating... [10s elapsed]
-aws_instance.nodes[1]: Still creating... [10s elapsed]
-aws_instance.manager[0]: Still creating... [20s elapsed]
-aws_instance.nodes[0]: Still creating... [20s elapsed]
-aws_instance.nodes[1]: Still creating... [20s elapsed]
-aws_instance.manager[0]: Still creating... [30s elapsed]
-aws_instance.nodes[0]: Still creating... [30s elapsed]
-aws_instance.nodes[1]: Still creating... [30s elapsed]
-aws_instance.nodes[1]: Creation complete after 32s [id=i-07bc63693d93d490c]
-aws_instance.manager[0]: Creation complete after 32s [id=i-0980de0e0d4587243]
-aws_instance.nodes[0]: Still creating... [40s elapsed]
-aws_instance.nodes[0]: Creation complete after 42s [id=i-09036eaf18c683cbb]
+Plan: 4 to add, 0 to change, 0 to destroy.
 
-Apply complete! Resources: 4 added, 0 changed, 0 destroyed.
+Changes to Outputs:
+  + manager_private_ips = (known after apply)
+  + manager_public_ip   = (known after apply)
+  + worker_private_ips  = (known after apply)
+aws_security_group.swarm: Creating...
+aws_security_group.swarm: Creation complete after 3s [id=sg-0b7efd8ea29bcb3fc]
+aws_instance.swarm[1]: Creating...
+aws_instance.swarm[2]: Creating...
+aws_instance.swarm[0]: Creating...
+aws_instance.swarm[2]: Still creating... [10s elapsed]
+aws_instance.swarm[1]: Still creating... [10s elapsed]
+aws_instance.swarm[0]: Still creating... [10s elapsed]
+aws_instance.swarm[1]: Creation complete after 13s [id=i-0f965005aef5e26c4]
+aws_instance.swarm[0]: Creation complete after 13s [id=i-013ba40a0fd5c48f3]
+aws_instance.swarm[2]: Still creating... [20s elapsed]
+aws_instance.swarm[2]: Still creating... [30s elapsed]
+aws_instance.swarm[2]: Creation complete after 32s [id=i-02006fbeecdd0811a]
+
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 
 Outputs:
 
-mamager_public_ip = [
-  [
-    "3.89.121.237",
-  ],
+manager_private_ips = [
+  "172.31.91.244",
 ]
-
-mamager_private_ip = [
-  [
-    "172.31.24.82",
-  ],
-]
-nodes_private_ip = [
-  [
-    "172.31.27.66",
-    "172.31.86.208",
-  ],
+manager_urls = {
+  "URL-2048" = "http://52.87.233.223:8080"
+  "URL-Portainer" = "http://52.87.233.223:9000"
+}
+worker_private_ips = [
+  "172.31.82.209",
+  "172.31.82.79",
 ]
 ```
-6. Acesse o console de EC2 Instances e terá 3 instâncias em execução `swarm-master`, `swarm-node-00` e `swarm-node-01`.
+15. Acesse o console de EC2 Instances e terá 3 instâncias em execução `swarm-master`, `swarm-node-00` e `swarm-node-01`.
 
 
 ![swarm](img/swarm-01.png)
 
-7. No outputs do terraform terá o `mamager_public_ip` e `nodes_public_ip`, copie esses IPs e cole no arquivo: `ansible/hosts`, conforme abaixo:
+16. No outputs do terraform terá o `mamager_public_ip` e `nodes_public_ip`, copie esses IPs e cole no arquivo: `ansible/hosts`, conforme abaixo:
 
 Colocar os IPs conforme abaixo:
 
@@ -115,7 +187,7 @@ Colocar os IPs conforme abaixo:
 172.31.86.208
 ```
 
-8. Agora no Cloud9 iremos instalar o Ansible:
+17. Agora no Cloud9 iremos instalar o Ansible:
 
 ```shell
 sudo apt update
@@ -130,70 +202,12 @@ ansible-playbook --version
 ansible-playbook [core 2.12.0]
 ```
 
-9. Configurando a private key no `Cloud9`
-No console do laboratório, clique na aba `Details` e em `Show`:
-
-![swarm](img/swarm-02.png)
-
-10. Em SSH Key, clique no botão `Show`
-
-![swarm](img/swarm-03.png)
-
-11. Copie a Private Key
-
-![swarm](img/swarm-04.png)
-
-10. No `Cloud9` acesse o terminal utilizando o vim e cole a chave
-
-```shell
-vim ~/.ssh/id_rsa
-```
-Pressione `i` de Insert, cole a chave
-
-```
------BEGIN RSA PRIVATE KEY-----
-MIIEpAIBAAKCAQEAl7kmA4i2jSqslZNY4ZIKysh7JIsqLYct1FKxj6t1LZwd0sYl
-A56T+aOzUe46ilvGeCtI/isqCuZreGlq+AxH8vTwF58wA0VBgEcNS0sVkAfoKcrD
-X0efddXRG4dQvTkQaw1XOknQpSG67r8WfvD6lhMC/BagUaX1ojAxZKL98xfHJS4V
-+Uo0VulKKCWQi97TwIffV3PWfAqNgTVx2ebQ53II0GRJQEbDLv1R9DQJWhFZhew/
-qgYasBRHHolDeqR5cMzL0FEdkPgPBOx/yknsHLTMU13WWFse34SxEFh5JpHhhWG0
-eUgBW2iAUPXrqkHtgQmbm5j5tG2e1orGgJkgswIDAQABAoIBAE5yR2paXHC+2L75
-kWIH3Zadc7YgUi16EEMQgogTEaIEbxMUqfymGEJh1oyNDS2OaB6n2rS34qQCIRz/
-/HPF/clrxVuhTfTS8Rv/IKuGZd6zh+Fb2gpAgP0vEVAXdbJwd8GyAyC7G6rVts5M
-dLgrppTDva5TkI7GrSsvmco7z+vI2qmxFQgCzhTxvYJbxnkFOzXqxNzWGjBqCkGr
-NYZhxSjHu7hi3risQ4IY1l3ejsHhh+lazfqX92EOebD1PKXLXA7fvfoN9mNQYKgD
-xhQnNSF5KzODfIs2wQBBkNq9Mg4bD1Tpu9qxq0m5g8XTEJlg1InPIMtLgNxQCJjU
-WX5NmCECgYEAyoHiYDOfH093cXCDeh6A8tW40ALpBFJvsvFOrugSqU+L+wGO02nO
-cluouhMT+EypapXhP/j6pvHAsy8rVTUdQwb2pyahy0VeJSmjkhbqiPu7nptPpci+
-pqUAFWmhvne1RSRKqr8Jq4q//054Re6BUUg+CHI6fCv9vtR/tzMdzMMCgYEAv80Z
-azJFq9Ae/OHXMVbsU2GiK4F08QsWsn4mulmllt3EjSsseFOp1k+8Riy2mDUXDSxq
-tcsf+Lu8eRD40W0vI0wvTOy+QRke5143e7/rU2ENY/0aRQeW4Jmw8JEVYw7sGlAs
-hq0EstI/CllQTo2mE+zqaN+OCkaalXyhZrGN3VECgYEAhglmPuqsHdtJYcppG8Fo
-9FJF21ixxuyRhk12GQr+nxZJvsAPOxvDS6ojidXq1+RWFnhR+TfhH/LP60oDUoiv
-b5gCViyZ1qN5ZvuiiqWkYzrLunVuSHsQxdhcr8+VAS7Wyob07QM5cVOLNX9I2HC/
-I3+/n3OMBnhPoamhRy8MQGUCgYA2Y1qJ4z+OcP3Yh9IV06hAHLd3zsXydEqDYvJo
-dXNXTJunzE5X8KGAfCvPWm6MysE2oxm/Y1I1nkbbrcxg1q0/PSNMlPV+UDlLMpRZ
-Kxr4EdVSPTttx7EpD2v1S67c4CZjb8iwh++FJclqjdkP7Wriy5PNGVeV4l+DdEvw
-avjngQKBgQCPC5kO3JKZGQuC0gcENkilZYw2Rsr1h7oE20qppU7HmpvjFwsg/Uv4
-ytLt7PbCqlHQiHciSzo7oI7noupoiiq0/SjRNQGezFgpUPICQLNouRi+tMhcbRMy
-Nxro55/2tDvnFo868MryxC1Dtpbbm7aztXueRVzE+sYx4mlOQfQhZA==
------END RSA PRIVATE KEY-----
-```
-
-Altere a permissão do arquivo que acabamos de criar
-
-```shell
-chmod 400 ~/.ssh/id_rsa
-```
-
-11. Salve o arquivo e saia, digitando: `ESC` + `wq`
-
 Exporte a variável de ambiente para não pedir checagem da Key:
 ```
 export ANSIBLE_HOST_KEY_CHECKING=false
 ```
 
-12. Agora iremos executar o Ansible para configurar nosso Cluster Docker Swarm
+18. Agora iremos executar o Ansible para configurar nosso Cluster Docker Swarm
 
 Entre no diretório do ansible:
 
@@ -339,21 +353,17 @@ docker service ls
 
 19. Agora vamos acessar o frontend do Portainer
 
-No Outputs do Terraform, ele também lista o ip público:
+No Outputs do Terraform, ele exibe as URLs que iremos utilizar, então clique na URL do portainer
 
 ```shell
-mamager_public_ip = [
-  [
-    "3.89.121.237",
-  ],
-]
+manager_urls = {
+  "URL-2048" = "http://52.87.233.223:8080"
+  "URL-Portainer" = "http://52.87.233.223:9000"
+}
 ```
 
-Copie o IP e cole no seu browser:
+20. Clique na URL `Portainer` e será redirecionado para o browser, onde irá carregar o frontend do Portainer
 
-http://3.89.121.237:9000
-
-20. Ao colar este IP, ele irá carregar o frontend do Portainer
 
 Em `Username` deixe o usuário `admin`  
 Em `Password` coloque a senha: `012345678910` e `Confirme password` com a mesma senha  
@@ -401,7 +411,16 @@ docker stack deploy -c 2048-stack.yml 2048
 
 22. Acesse o 2048 através do seu browser
 
-http://3.89.121.237:8080/
+No Outputs do Terraform, ele exibe as URLs que iremos utilizar, então clique na URL do portainer
+
+```shell
+manager_urls = {
+  "URL-2048" = "http://52.87.233.223:8080"
+  "URL-Portainer" = "http://52.87.233.223:9000"
+}
+```
+
+Clique na URL 2048
 
 ![swarm](img/swarm-07.png)
 
