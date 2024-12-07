@@ -74,9 +74,9 @@ git clone https://github.com/gersontpc/container-technologies.git
 
 Após clonar o repositório, iremos acessar o diretório 
 
-1. Acesse o diretório aula3:
+1. Acesse o diretório Lab-03:
 ```shell
-cd container-technologies/aula3/
+cd container-technologies/Lab-03/
 ```
 
 2. Execute o comando `docker compose up -d` para iniciar os serviços do wordpress
@@ -143,14 +143,16 @@ networks:
 sudo snap install jq
 ```
 ```shell
-URL="http://$(aws ec2 describe-instances --instance-ids $(wget -qO- http://169.254.169.254/latest/meta-data/instance-id) | jq -r '.Reservations[].Instances[] | .PublicIpAddress'):8080" echo $URL
+URL="http://$(aws ec2 describe-instances \
+    --instance-ids $(curl -s http://169.254.169.254/latest/meta-data/instance-id) \
+    --query "Reservations[0].Instances[0].PublicIpAddress" --output text):8080" && echo $URL
 ```
 Output:
 ```shellscript
-http://44.192.106.213:8080
+http://44.202.53.105:8080
 ```
 
-4. Clique na URL para abrir o frontend do wordpress
+4. Copie a URL e cole em seu navegador para abrir o frontend do wordpress
 
 Selecione **Português do Brasil** e clique em **Continuar**
 
@@ -192,9 +194,9 @@ docker compose scale mysql=3
 Output:
 ```shell
 [+] Running 3/3
- ✔ Container aula3-mysql-3  Started            0.1s  
- ✔ Container aula3-mysql-1  Started            0.5s   
- ✔ Container aula3-mysql-2  Started            0.1s 
+ ✔ Container Lab-03-mysql-3  Started            0.1s  
+ ✔ Container Lab-03-mysql-1  Started            0.5s   
+ ✔ Container Lab-03-mysql-2  Started            0.1s 
 ```
 
 11. Liste os contêineres dos serviços
@@ -206,21 +208,21 @@ docker compose ps
 Output:
 ```output
 NAME                IMAGE              COMMAND                  SERVICE     CREATED              STATUS                                  PORTS
-aula3-mysql-1       mariadb:latest     "docker-entrypoint.s…"   mysql       About a minute ago   Restarting (1) Less than a second ago   
-aula3-mysql-2       mariadb:latest     "docker-entrypoint.s…"   mysql       About a minute ago   Restarting (1) Less than a second ago   
-aula3-mysql-3       mariadb:latest     "docker-entrypoint.s…"   mysql       About a minute ago   Up About a minute                       3306/tcp
-aula3-wordpress-1   wordpress:latest   "docker-entrypoint.s…"   wordpress   2 minutes ago        Up 2 minutes                            0.0.0.0:8080->80/tcp, :::8080->80/tcp
+Lab-03-mysql-1       mariadb:latest     "docker-entrypoint.s…"   mysql       About a minute ago   Restarting (1) Less than a second ago   
+Lab-03-mysql-2       mariadb:latest     "docker-entrypoint.s…"   mysql       About a minute ago   Restarting (1) Less than a second ago   
+Lab-03-mysql-3       mariadb:latest     "docker-entrypoint.s…"   mysql       About a minute ago   Up About a minute                       3306/tcp
+Lab-03-wordpress-1   wordpress:latest   "docker-entrypoint.s…"   wordpress   2 minutes ago        Up 2 minutes                            0.0.0.0:8080->80/tcp, :::8080->80/tcp
 ```
 
 12. Setando os limites dos contêineres:
 
 ```shell
 docker compose -f compose-limits.yml up -d
-WARN[0000] /home/ubuntu/environment/container-technologies/aula3/compose-limits.yml: `version` is obsolete 
+WARN[0000] /home/ubuntu/environment/container-technologies/Lab-03/compose-limits.yml: `version` is obsolete 
 [+] Running 2/3
- ⠧ Network aula3_wordpress      Created          0.8s 
- ✔ Container aula3-mysql-1      Started          0.3s 
- ✔ Container aula3-wordpress-1  Started          0.6s 
+ ⠧ Network Lab-03_wordpress      Created          0.8s 
+ ✔ Container Lab-03-mysql-1      Started          0.3s 
+ ✔ Container Lab-03-wordpress-1  Started          0.6s 
 ```
 Conteúdo do **compose-limits.yaml**
 
