@@ -74,12 +74,12 @@ git clone https://github.com/gersontpc/container-technologies.git
 
 Após clonar o repositório, iremos acessar o diretório 
 
-1. Acesse o diretório Lab-03:
+13. Acesse o diretório Lab-03:
 ```shell
 cd container-technologies/Lab-03/
 ```
 
-2. Execute o comando `docker compose up -d` para iniciar os serviços do wordpress
+14. Execute o comando `docker compose up -d` para iniciar os serviços do wordpress
 
 ```shell
 docker compose up -d
@@ -137,11 +137,9 @@ networks:
     driver: bridge
 
 ```
-3. Após subir a stack do wordpress, execute o comando abaixo
+15. Após subir a stack do wordpress, execute o comando abaixo
 
-```shell
-sudo snap install jq
-```
+
 ```shell
 URL="http://$(aws ec2 describe-instances \
     --instance-ids $(curl -s http://169.254.169.254/latest/meta-data/instance-id) \
@@ -152,13 +150,13 @@ Output:
 http://44.202.53.105:8080
 ```
 
-4. Copie a URL e cole em seu navegador para abrir o frontend do wordpress
+16. Copie a URL e cole em seu navegador para abrir o frontend do wordpress
 
 Selecione **Português do Brasil** e clique em **Continuar**
 
 ![cloud9](img/wordpress-01.png)
 
-5. Preencha a tela de boas vindas  
+17. Preencha a tela de boas vindas  
 **Título do site:** container-technologies  
 **Nome do usuário:** wpuser  
 **O seu e-mail:** seu e-mail da faculdade <gerson.carneiro@aluno.faculdadeimpacta.com.br>  
@@ -166,26 +164,26 @@ Em seguida clique em **Instalar Wordpress:**
 
 ![cloud9](img/wordpress-02.png)
 
-6. Na tela de login coloque o usuário *wpuser* e a senha gerada.
+18. Na tela de login coloque o usuário *wpuser* e a senha gerada.
 
 **Nome de usuário ou endereço de e-mail:** wpuser  
 **Senha:** `fn6x@N)SIgRT$o!17T`  
 ![cloud9](img/wordpress-03.png)
 
-7. Ao acessar o console de administração do wordpress, no canto superior esquerdo, clique em **container-technologies**
+19. Ao acessar o console de administração do wordpress, no canto superior esquerdo, clique em **container-technologies**
 
 ![cloud9](img/wordpress-04.png)
 
-8. Pronto! Site do wordpress criado com sucesso!
+20. Pronto! Site do wordpress criado com sucesso!
 
 ![cloud9](img/wordpress-05.png)
 
-9. Agora vamos definir os limites dos contêineres do nosso serviço, executando o comando abaixo
+21. Agora vamos definir os limites dos contêineres do nosso serviço, executando o comando abaixo
 
 ```shell
 docker compose -f compose-limits.yml up -d
 ```
-10. Vamos escalar as réplicas dos contêineres do mysql
+22. Vamos escalar as réplicas dos contêineres do mysql
 
 ```shell
 docker compose scale mysql=3
@@ -199,7 +197,7 @@ Output:
  ✔ Container Lab-03-mysql-2  Started            0.1s 
 ```
 
-11. Liste os contêineres dos serviços
+23. Liste os contêineres dos serviços
 
 ```shell
 docker compose ps
@@ -214,7 +212,7 @@ Lab-03-mysql-3       mariadb:latest     "docker-entrypoint.s…"   mysql       A
 Lab-03-wordpress-1   wordpress:latest   "docker-entrypoint.s…"   wordpress   2 minutes ago        Up 2 minutes                            0.0.0.0:8080->80/tcp, :::8080->80/tcp
 ```
 
-12. Setando os limites dos contêineres:
+24. Setando os limites dos contêineres:
 
 ```shell
 docker compose -f compose-limits.yml up -d
@@ -290,7 +288,7 @@ networks:
     driver: bridge
 ```
 
-13. Limpando o ambiente
+25. Limpando o ambiente
 
 Execute os comandos:
 ```shell
@@ -312,4 +310,4 @@ WARNING! This will remove:
 Are you sure you want to continue? [y/N] y
 ```
 
-14. Laboratório concluído com sucesso!
+26. Laboratório concluído com sucesso!
