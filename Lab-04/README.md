@@ -106,16 +106,17 @@ Agora iremos importar as credenciais da AWS.
 
 12. Cole insira conforme o comando abaixo:
 
+```shell
 cat <<'EOF' > ~/.aws/credentials
-
 [default]
 aws_access_key_id=ASIAST7WWWYCJBLLRJ5NR
 aws_secret_access_key=L4sygxmWWWWWBuVKxpl/rl9ABAgZTTVeSa3+L5+
 aws_session_token=IQoJb3JpZ2luX2VjEJddddeediushpfbkWWWWWWWIPNEnekj...o440GqmBrElblUh4J2qcEYhYGyW
-
 EOF
+```
 
 13. Cole no terminal e pressione [ENTER]
+
 
 
 14. Agora iremos `terraform init` para baixar os plugins.
