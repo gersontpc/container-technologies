@@ -36,59 +36,83 @@ Ter acesso a conta lab no AWS Academy https://awsacademy.instructure.com/.
 
 1. Acesse o console da aws e pesquise por EKS e clique em Elastic Kubernetes Service.
 
-![nginx](img/1.png)
+![](img/eks-01.png)
 
-2. Ao clicar na página do serviço clique em <b>Add cluster</b>.
+2. Ao clicar na página do serviço clique em <b>Create cluster</b>.
 
-![nginx](img/2.png)
+![](img/eks-02.png)
 
-Depois clique em create.
+Em <b>Configure cluster</b>, selecione a opção <b>Custom configuration</b>.
 
-![nginx](img/3.png)
+![](img/eks-03.png)
 
-3. Ao clicar em create vamos preencher o nome do nosso cluster como `eks-lab` em <b>Nome</b>.
+3. Ao selecionar <b>Custom configuration</b>, perceba que a visualização da criação ela irá mudar (conforme destacado na cor verde, em <b>Custom configuration</b> em Name iremos colocar o nome do nosso cluster, que será `eks-lab`
 
-![nginx](img/4.png)
+![](img/eks-04.png)
 
-4. Logo em seguida clique em Next.
+4. Vá até <b>Auto Mode Compute - <i>New</b></i>, e descelecione a opção <b>Use EKS Auto Mode</b>
 
-![nginx](img/5.png)
+![](img/eks-05.png)
 
-5. Em <b>Subnets</b> selecione as subnets `us-east-1a`, `us-east-1b` e `us-east-1c` e em <b>Security Groups</b> selecione o security group `default`.
+5. Em seguida clique em <b>Next</b>
 
-![nginx](img/6.png)
+![](img/eks-06.png)
 
-6. Clique em Next:
+6. Na sessão <b>Specify networking</b>, em <b>VPC</b> deixe a sua <b>VPC Default</b> da conta, em <b>Subnets</b> selecione somente as subnets: <b>us-east-1a</b>, <b>us-east-1b</b> e <b>us-east-1c</b>, conforme o print abaixo.
 
-![nginx](img/7.png)
+![](img/eks-07.png)
 
-7. Nas configurações de log, em <b>Control plane logging</b> habilite os logs do `API Server`, `Audit`, `Authenticator`, `Controller Manager` e `Scheduler` e depois clique em <b>Next</b>.
+7. Por último clique em <b>Next</b>
 
-![nginx](img/8.png)
+![](img/eks-08.png)
 
-8. Em <b>add-ons</b> deixe selecionado o `CoreDNS`, `Amazon VPC CNI` e `kube-proxy`, logo em seguida clique em <b>Next</b>.
+8. Na sessão <b>Configure observability</b>, vá até <b>Control plane logs</b> e habilite os logs para: <b>API Server</b>, <b>Audit</b>, <b>Authenticator</b>, <b>Controller manager</b> e <b>Scheduler</b>.
 
-![nginx](img/9.png)
+![](img/eks-09.png)
 
-9. Clique em <b>Next</b>.
+9. Em seguida clique em <b>Next</b>
 
-![nginx](img/10.png)
+![](img/eks-10.png)
 
-10. Clique em <b>Next</b> novamente para confirmar a instalação das versões dos plugins.
+10. Na sessão <b>Select add-ons</b>, os <b>Add-ons</b>: <b>kube-proxy</b>, <b>CoreDNS</b>, <b>Amazon VPC CNI</b> e <b>Amazon EKS Pod Identity Agent</b>, já estarão pré-selecionados.
 
-![nginx](img/11.png)
+![](img/eks-11.png)
 
-11. Aguarde a criação do cluster, demora em torno de 10 minutos.
+![](img/eks-12.png)
 
-![nginx](img/11.1.png)
+Para que serve cada Add-on ?
 
-![nginx](img/11.2.png)
+> O <b>kube-proxy</b>: Cuida do roteamento interno de tráfego no cluster Kubernetes.  
+O <b>CoreDNS</b>: Oferece resolução de nomes, essencial para que os serviços e pods possam se localizar.  
+O <b>Amazon VPC CNI</b>: Conecta os pods diretamente à infraestrutura da VPC, garantindo integração nativa com outros serviços AWS.  
+O<b> Amazon EKS Pod Identity Webhook</b> (também conhecido como Amazon EKS Pod Identity Agent) é um add-on do Amazon EKS que habilita o uso de IAM Roles for Service Accounts (IRSA). Esse add-on permite que os pods executados em um cluster EKS assumam funções específicas do IAM (IAM roles) usando o mapeamento de identidades, sem precisar configurar credenciais de acesso (chaves de acesso e secret keys) diretamente nos containers.
+
+11. Clique novamente em <b>Next</b>
+
+![](img/eks-13.png)
+
+12. Na sessão <b>Configure selected add-ons settings</b>, clique em <b>Next</b> novamente!
+> Esta sessão serve para selecionar as versões dos Add-ons, iremos deizar as versões padrão.
+
+![](img/eks-14.png)
+
+13. Na sessão <b>Review and create</b>, clique em <b>Create</b>.
+> Esta sessão serve para revisar todas as configurações que realizamos.
+
+![](img/eks-15.png)
+
+14. Após clicar em <b>Create</b>, você será direcionado para o <b>Cluster</b>, repare que em <b>Status</b> o cluster está em <b>Creating</b>.
+> Este passo, demora em torno de 10 minutos.
+
+![](img/eks-16.png)
+
+Enquanto o cluster está sendo criado iremos conhecer o <b>CloudShell</b> da AWS.
 
 ### Cloud Shell
 
-Para gerenciar o nosso cluster, iremos utilizar o Cloud Shell serviço de Terminal Interativo da AWS.
+Para gerenciar o nosso cluster, iremos utilizar o <b>CloudShell</b> serviço de Terminal Interativo da AWS.
 
-Antes vamos entender o que é o Cloud Shell!
+Antes vamos entender o que é o CloudShell!
 
 O AWS Cloud Shell é um ambiente de terminal interativo baseado no navegador que permite que você execute comandos e scripts da AWS CLI. Ele é pré-provisionado com as ferramentas e bibliotecas mais comuns que você precisa para trabalhar com a AWS, incluindo:
 
@@ -96,19 +120,25 @@ O AWS Cloud Shell é um ambiente de terminal interativo baseado no navegador que
 - Python: Uma linguagem de programação popular
 - Node.js: Um ambiente de execução JavaScript
 - Git: Um sistema de controle de versão
+- Kubectl: Ferramenta que se conecta ao API Server para poder gerenciar clusters Kubernetes.
 
-12. No concole da AWS, no canto inferior esquerdo, tem o ícone do Cloud Shell, clique nele!
-![nginx](img/cd01.png)
+15. No concole da AWS, no canto inferior esquerdo, tem o ícone do Cloud Shell, clique nele!
 
-13. Ao clicar no ícone do CloudShell ele irá provisionar um console para você poder utilizar para gerenciar os serviços da aws através de CLI (Command Line Interface).
-![nginx](img/cd02.png)
+![](img/eks-17.png)
+
+16. Ao clicar no ícone do CloudShell ele irá provisionar um console para você poder utilizar para gerenciar os serviços da aws através de CLI (Command Line Interface).
+
+![](img/eks-18.png)
 
 > O CloudShell é como se fosse aqueles consoles que existe em data centers, para quem não conhece:
-![nginx](img/cd03.png)
+
+![](img/cd03.png)
 
 Agora que conhece o CloudShell e para que ele serve, iremos utilizar ele até o final desta aula.
 
-Nosso cluster já foi provisionado e agora precisamos gerenciar ele, lembra que eu comentei sobre o API Server que o cliente (kubectl) se conecta a ele para poder gerenciar o cluster.
+![](img/eks-19.png)
+
+Com nosso cluster provisionado, precisamos gerenciar ele, lembra que eu comentei sobre o endpoint do API Server que o cliente (kubectl) se conecta a ele para poder gerenciar o cluster, então agora iremos ver na prática.
 
 ### Conhecendo o kubectl
 
@@ -124,31 +154,33 @@ O <b>CloudShell</b> já vem com o `kubectl` então não precise se preoupar com 
 
 
 ### Configurando o Kubectl
-14. Agora iremos configurar o autocomplete do `kubectl` e o alias `k` para facilitar na administração do cluster.
+17. Agora iremos configurar o autocomplete do `kubectl` e o alias `k` para facilitar na administração do cluster.
 
 
 Habilitando o auto complete:
 
 ```shell
-source <(kubectl completion bash)
-
 cat <<'EOF' >> ~/.bashrc
-
 # Enable alias and autocomplete
 source <(kubectl completion bash)
 alias k="kubectl"
 complete -o default -F __start_kubectl k
-
 EOF
 
 source ~/.bashrc
 ```
 
-15. Após configurar o alias, execute o comando abaixo no <b>CloudShell</b>, para configurar o acesso do `kubectl` ao cluster EKS:
+18. Após configurar o alias, execute o comando abaixo no <b>CloudShell</b>, para configurar o acesso do `kubectl` ao cluster EKS:
 
 ``` shell
 aws eks update-kubeconfig --region us-east-1 --name eks-lab
 ```
+Output:
+
+```shell
+Added new context arn:aws:eks:us-east-1:180359446674:cluster/eks-lab to /home/cloudshell-user/.kube/config
+```
+
 
 Verificando se os componentes do cluster está executando corretamente:
 
@@ -165,7 +197,7 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 
 ```
 
-16. Verificando se o Etcd, Scheduler e o Controller-Manager está funcionando corretamente.
+19. Verificando se o Etcd, Scheduler e o Controller-Manager está funcionando corretamente.
 
 ``` shell
 kubectl get componentstatuses
@@ -179,7 +211,7 @@ controller-manager   Healthy   ok
 scheduler            Healthy   ok
 ```
 
-17. Listando os nós do cluster:
+20. Listando os nós do cluster:
 
 ``` shell
 kubectl get nodes
@@ -194,25 +226,55 @@ O que está faltando provisionar?
 
 ### Provisionando os Nodes Groups
 
-18. Faltou provisionarmos o nosso <b>Node Group</b>, para provisionar, em [cluster EKS](https://us-east-1.console.aws.amazon.com/eks/home?region=us-east-1#/clusters/eks-lab) clique em <b>Compute</b> e logo na sequência clique em <b>Add node group</b>.
+21. Faltou provisionarmos o nosso <b>Node Group</b>, para provisionar, vá até o seu Cluster <b>eks-lab</b>, clique em <b>Compute</b>:
 
-![](img/12.png)
+![](img/eks-20.png)
 
-19. Adiciono o nome `eks-lab-node-group` e selecione o IAM role `LabRole` e clique em <b>Next</b>.
+22. E clique em <b>Add node group</b> para adicionar um novo Node Group
 
-![](img/12.1.png)
+![](img/eks-21.png)
 
-20. Na pagina seguinte apenas clique em <b>Next</b>.
+23. Em <b>Name</b>, coloque o nome: `eks-lab-node-group` e em <b>Node IAM role</b>, selecione `LabRole`.
 
-![](img/12.2.png)
+![](img/eks-22.png)
 
-21. Na pagina seguinte apenas clique em <b>Next</b>.
+24. Clique em <b>Next</b>
 
-![](img/12.3.png)
+![](img/eks-23.png)
 
-22. Revise as informações e clique em <b>Create</b>.
+25. Na sessão <b>Set compute and scaling configuration</b>, clique em <b>Next</b>
 
-23. Listando os componentes do cluster
+> Aqui você pode selecionar o tipo de instância, tamanho do disco, a quantidade mínima, desejada e máxima de nodes, além do update.
+
+![](img/eks-23.png)
+
+26. Na sessão <b>Specify networking</b> clique em <b>Next</b>
+
+> Ele selecionará as subnets já setadas no cluster.
+
+![](img/eks-23.png)
+
+27. Na sessão <b>Review and create</b> Revise as configurações e clique em <b>Create</b>.
+
+![](img/eks-24.png)
+
+28. Ao criar o Node Group `eks-lab-node-group`, irá ficar com o status de <b>Creating</b>
+
+> Os nós demora alguns minutos até ficarem prontos.
+
+![](img/eks-25.png)
+
+Após alguns minutos os nós foram criados e estão com o status de <b>Pronto</b> (Ready)
+
+![](img/eks-26.png)
+
+Execute o comando abaixo no CloudShell para visualizar os nós.
+
+```shell
+kubectl get nodes
+```
+
+29. Listando os componentes do cluster
 
 ``` shell
 kubectl get all --all-namespaces
@@ -244,7 +306,7 @@ NAMESPACE     NAME                                DESIRED   CURRENT   READY   AG
 kube-system   replicaset.apps/coredns-58488c5db   2         2         2       9h
 ```
 
-24. Listando os contextos dos clusters configurados:
+30. Listando os contextos dos clusters configurados:
 
 ``` shell
 kubectl config get-contexts
@@ -289,43 +351,43 @@ contexts:
 ```
 
 ### Habilitando o observability do Cluster
-25. No cluster clique na aba Add-ons e clique em **Get more add-ons**.
+31. No cluster clique na aba Add-ons e clique em **Get more add-ons**.
 
-![](img/eks-observability-01.png)
+![](img/eks-27.png)
 
-26. Marque o plugin **Amazon CloudWatch Observability**.
+32. Marque o plugin **Amazon CloudWatch Observability**.
 
-![](img/eks-observability-02.png)
+![](img/eks-28.png)
 
-27. Depois clique em **Next**.
+33. Depois clique em **Next**.
 
-![](img/eks-observability-03.png)
+![](img/eks-29.png)
 
-28. Clique em next novamente.
+34. Clique em next novamente.
 
-![](img/eks-observability-04.png)
+![](img/eks-30.png)
 
-29. E por último clique em **Create**.
+35. E por último clique em **Create**.
 
-![](img/eks-observability-05.png)
+![](img/eks-31.png)
 
 Aguarde a criação...
 
-![](img/eks-observability-06.png)
+![](img/eks-32.png)
 
-30. Após alguns minutos o status deve ficar como **Active**.
+36. Após alguns minutos o status deve ficar como **Active**.
 
-![](img/eks-observability-07.png)
+![](img/eks-33.png)
 
-31. Agora iremos ir até o CloudWatch para visualizar o observability do Cluster.
+37. Agora iremos ir até o CloudWatch para visualizar o observability do Cluster.
 
 Em serviços pesquise por **CloudWatch**, após clicar em CloudWatch clique em **Container Insights**.
 
-![](img/eks-observability-08.png)
+![](img/eks-34.png)
 
-32. Em [1] **Container Insights** selecione *Service: EKS*, logo após clique em [2] **View in maps**.
+38. Em [1] **Container Insights** selecione *Service: EKS*, logo após clique em [2] **View in maps**.
 
-![](img/eks-observability-09.png)
+![](img/eks-35.png)
 
 O Container Insights para EKS é uma ferramenta poderosa que oferece monitoramento, registro e análise abrangentes para seus containers no Amazon Elastic Kubernetes Service (EKS). Ele fornece uma visão holística da saúde e do desempenho de seus aplicativos em contêiner, permitindo que você:
 
@@ -343,19 +405,19 @@ Benefícios do Container Insights:
 **Segurança Reforçada:** Proteja seus containers e cluster EKS contra ameaças à segurança.  
 **Gerenciamento Simplificado:** Simplifique o gerenciamento do seu cluster EKS e dos containers em execução.
 
-![](img/eks-observability-10.png)
+![](img/eks-36.png)
 
 ### Realizando o deploy de uma aplicação
 
 Agora que já entendemos os principais componentes do Cluster, iremos realizar o deploy de uma app, essa app será basicamente uma imagem do NGINX,  O NGINX é um servidor web de código aberto que pode ser usado para servir arquivos estáticos ou atuar como um proxy reverso para outros servidores web.
 
 
-33. Primeiro iremos clonar o repositório da aula no Cloud Shell.
+39. Primeiro iremos clonar o repositório da aula no Cloud Shell.
 
 ```
 cd ~/
 git clone https://github.com/gersontpc/container-technologies.git
-cd ~/container-technologies/Lab-5/02-cluster-eks
+cd ~/container-technologies/Lab-05/02-cluster-eks/
 ```
 
 Após clonar o repositório, na path /manifests, tem os manifestos para realizarmos o deploy.
@@ -379,7 +441,7 @@ Execute o comando abaixo para criar o namespace
 kubectl apply -f manifests/00-namespace.yaml
 ```
 
-34. Após a criação do namespace, iremos executar o comando para listar todos os namespaces.
+40. Após a criação do namespace, iremos executar o comando para listar todos os namespaces.
 
 ``` shell
 kubectl get namespace
@@ -451,7 +513,7 @@ spec:
 `image:` especifica a imagem do container que será utilizada.  
 `ports:` especifica as portas que serão expostas pelo container. Neste caso, a porta 80 foi exposta.  
 
-35. Após entender cada item do nosso manifesto, vamos utilizar ele para realizar o deploy do nosso app.
+41. Após entender cada item do nosso manifesto, vamos utilizar ele para realizar o deploy do nosso app.
 
 
 ``` shell
@@ -463,7 +525,7 @@ OUTPUT:
 deployment.apps/nginx created
 ```
 
-36. Após aplicado, iremos listar a nossa app. Repare que os pods já estão em status de Running.
+42. Após aplicado, iremos listar a nossa app. Repare que os pods já estão em status de Running.
 
 ``` shell
 kubectl get pods -n nginx
@@ -473,7 +535,7 @@ nginx-57787bb6df-k27wr   1/1     Running   0          37s
 nginx-57787bb6df-lvrp4   1/1     Running   0          37s
 ```
 
-37. Trazendo informação mais detalhada dos pods.
+43. Trazendo informação mais detalhada dos pods.
 
 ``` shell
 kubectl get pods -n nginx -o wide
@@ -487,7 +549,7 @@ nginx-57787bb6df-k27wr   1/1     Running   0          2m1s   172.31.3.92     ip-
 nginx-57787bb6df-lvrp4   1/1     Running   0          2m1s   172.31.89.245   ip-172-31-93-147.ec2.internal   <none>           <none>
 ```
 
-38. Conhecendo o POD da nossa app, com o comando `kubectl describe pods <pod-name>`
+44. Conhecendo o POD da nossa app, com o comando `kubectl describe pods <pod-name>`
 
 ``` shell
 kubectl describe pods nginx-57787bb6df-2sgx7 -n nginx
@@ -561,7 +623,7 @@ Events:
   Normal  Started    3m18s  kubelet            Started container nginx
 ```
 
-39. Conhecendo o nosso deploy, utilizando o comando `kubectl describe deploy <deploy-name>`, mas antes iremos pegar o nome do nosso deploy.  
+45. Conhecendo o nosso deploy, utilizando o comando `kubectl describe deploy <deploy-name>`, mas antes iremos pegar o nome do nosso deploy.  
 Primeiro vamos realizar o `kubectl get deploy` para listar todos os deploys de todos os namespaces.
 
 
@@ -673,21 +735,19 @@ OUTPUT:
 service/nginx-service created
 ```
 
-42. Antes de acessar o app pelo browser, vamos liberar o security group dos EC2 do node group para acessar o Load Balancer. Para isso acesse o painel de [EC2 Rodando](https://us-east-1.console.aws.amazon.com/ec2/home?region=us-east-1#Instances:instanceState=running).
-43. Selecione um dos 2 EC2  do tipo t3.medium que estão sem nome.
-    
-    ![](img/sg-1.png)
-44. Selecione a aba `Security` na parte inferior da tela. E clique no link em azul iniciando com `sg-`
-    
-    ![](img/sg-2.png)
-    ![](img/sg-3.png)
-45. Clique na aba `Inbound Rules` e depois no botão `Edit inbound rules` no canto inferior direito.
-    
-46. Delete todas as regras e clique em `Add rule`. No tipo coloque `all traffic` ou `Todo Trafego` em português e em source coloque `Anywhere-IpV4`. Clique em `Save rules`.
+46. Antes de acessar o app pelo browser, vamos liberar o security group dos Node Groups para acessar a app, vá até o cluster EKS, aba <b>Networking</b> e em <b>Cluster security group</b>, clique no id do security group [sg-00e6a5104f3b24d2a].
 
-![](img/sg-4.png)
+![](img/eks-37.png)
 
-47. Acessado a nossa "app" via Load Balancer.
+47. Na aba <b>Inbound rules</b> clique em <b>Edit inbound rules</b>
+
+![](img/eks-38.png)
+
+48. [1] Clique em <b>Add rule</b>, [2] selecione a regra <b>HTTP</b>, libere para qualquer origem <b>0.0.0.0/0</b>, [3] clique em <b>Save rules</b>, para salvar a regra.
+
+![](img/eks-39.png)
+
+49. Acessado a nossa "app" via Load Balancer.
 
 ``` shell
 kubectl get service -n nginx
@@ -701,18 +761,18 @@ nginx   LoadBalancer   10.100.84.30   a0d10f8234df541fc807413cb72fe8dc-844940680
 
 Repare que a nossa service `nginx` foi criada com sucesso.
 
-48. Agora vamos acessar o app através do navegador, digite a url do Load Balancer:
+50. Agora vamos acessar o app através do navegador, digite a url do Load Balancer:
 
 ```
-http://a0d10f8234df541fc807413cb72fe8dc-844940680.us-east-1.elb.amazonaws.com/
+http://a1b5767bf329144d69671d9377adcdc8-228760430.us-east-1.elb.amazonaws.com/
 ```
-![nginx](img/service-01.png)
+![](img/eks-40.png)
 
 Sucesso! conseguimos acessar a nossa app.
 
 ### Escalando os PODs
 
-49. Para escalar os pods iremos executar o comando `kubectl scale deployment`, atualmente temos 2 répicas e iremos aumentar para 8 réplicas.
+51. Para escalar os pods iremos executar o comando `kubectl scale deployment`, atualmente temos 2 répicas e iremos aumentar para 8 réplicas.
 
 ``` shell
 kubectl scale deployment nginx --replicas=8 -n nginx
@@ -723,7 +783,7 @@ OUTPUT:
 deployment.apps/nginx scaled
 ```
 
-50. Checando se foi escalado corretamente.
+52. Checando se foi escalado corretamente.
 
 ``` shell
 kubectl get pods -n nginx
@@ -742,7 +802,7 @@ nginx-57787bb6df-r4qzq   0/1     ContainerCreating   0          3s
 nginx-57787bb6df-sn64c   0/1     ContainerCreating   0          3s
 ```
 
-51. Repare que os containers foram escalados para 8 réplicas.
+55. Repare que os containers foram escalados para 8 réplicas.
 
 ``` shell
 kubectl get pods -n nginx
@@ -763,7 +823,7 @@ nginx-57787bb6df-sn64c   1/1     Running   0          80m
 
 Pronto os PODs foram escalados com sucesso!
 
-52. Vamos voltar para duas réplicas.
+53. Vamos voltar para duas réplicas.
 
 ``` shell
 kubectl scale deployment nginx --replicas=2 -n nginx
@@ -776,7 +836,7 @@ deployment.apps/nginx scaled
 
 ### Realizando rollback de versão
 
-53. Para realizar o rollback da versão iremos aplicar o manifesto `manifests/deployment-v1.yaml`
+54. Para realizar o rollback da versão iremos aplicar o manifesto `manifests/deployment-v1.yaml`
 
 ``` shell
 kubectl apply -f manifests/03-deployment-v1.yaml
@@ -787,7 +847,7 @@ OUTPUT:
 deployment.apps/nginx-deployment configured
 ```
 
-54. Execute o curl para verificar se alterou a página do nosso webserver.
+55. Execute o curl para verificar se alterou a página do nosso webserver.
 
 ``` shell
 curl http://a0d10f8234df541fc807413cb72fe8dc-844940680.us-east-1.elb.amazonaws.com/
@@ -799,9 +859,9 @@ OUTPUT:
 ```
 
 Ou acesse pelo browser:  
-![nginx](img/deploy-v1.png)
+![](img/deploy-v1.png)
 
-55. Após realizar o deploy, vamos realizar o deploy do `manifests/deployment-v2.yaml`
+56. Após realizar o deploy, vamos realizar o deploy do `manifests/deployment-v2.yaml`
 
 ``` shell
 kubectl apply -f manifests/04-deployment-v2.yaml
@@ -812,10 +872,10 @@ OUTPUT:
 deployment.apps/nginx-deployment configured
 ```
 
-56. Execute o curl para verificar se alterou a versão.
+57. Execute o curl para verificar se alterou a versão.
 
 ``` shell
-# curl http://a0d10f8234df541fc807413cb72fe8dc-844940680.us-east-1.elb.amazonaws.com/
+curl http://a0d10f8234df541fc807413cb72fe8dc-844940680.us-east-1.elb.amazonaws.com/
 ```
 
 ```shell
@@ -823,9 +883,9 @@ OUTPUT:
 <h1>Deploy V2!</h1>
 ```
 Ou acesse pelo browser:  
-![nginx](img/deploy-v2.png)
+![](img/deploy-v2.png)
 
-57. Repare que os pods estão recém criados:
+58. Repare que os pods estão recém criados:
 ``` shell
 kubectl get pods -l app=nginx -n nginx
 ```
@@ -838,7 +898,7 @@ nginx-5fd47c7f7-gg8qj   1/1     Running   0          10s
 nginx-5fd47c7f7-mqfm5   1/1     Running   0          10s
 ```
 
-58. Agora iremos realizar o Rollback para a versão 1 do nosso deployment. O Deployment cria uma revisão a cada alteração no deploy, para listar essas versões iremos utilizar o `kubectl rollout history`:
+59. Agora iremos realizar o Rollback para a versão 1 do nosso deployment. O Deployment cria uma revisão a cada alteração no deploy, para listar essas versões iremos utilizar o `kubectl rollout history`:
 
 ``` shell
 kubectl rollout history deploy nginx -n nginx
@@ -853,7 +913,7 @@ REVISION  CHANGE-CAUSE
 3         <none>
 ```
 
-59. Agora vamos realizar o rollback para a versão 2 da nossa app.
+60. Agora vamos realizar o rollback para a versão 2 da nossa app.
 
 ``` shell
 kubectl rollout undo deployment/nginx --to-revision=1 -n nginx
@@ -863,7 +923,7 @@ kubectl rollout undo deployment/nginx --to-revision=1 -n nginx
 deployment.apps/nginx rolled back
 ```
 
-60. Vamos checar se ele alterou para a versão que fizemos a nossa alteração:
+61. Vamos checar se ele alterou para a versão que fizemos a nossa alteração:
 
     Realize o curl para verificar se estamos na Versão 2 da app, lembrando que na linha do tempo a versão 2 do histório de deploy, deve retornar a página com a frase <b>Deploy V1!</b>.
 
@@ -876,7 +936,7 @@ OUTPUT:
 <h1>Deploy V1!</h1>
 ```
 Ou acesse pelo browser:  
-![nginx](img/deploy-v1.png)
+![](img/deploy-v1.png)
 
 Pronto, agora você acabou de aprender a fazer rollback para uma versão específica da sua app.
 
@@ -887,7 +947,7 @@ Agora é hora de limpar a casa! :)
 
 Vamos deletar os objetos que criamos dentro do nosso cluster Kubernetes
 
-61. Deletando a Service:
+62. Deletando a Service:
 
 ``` shell
 kubectl delete -f manifests/02-service-nginx.yaml
@@ -898,7 +958,7 @@ OUTPUT:
 service "nginx" deleted
 ```
 
-62. Deletendo o Deployment:
+63. Deletendo o Deployment:
 
 ``` shell
 kubectl delete -f manifests/01-deployment.yaml
@@ -911,51 +971,46 @@ deployment.apps "nginx" delete
 
 Excluindo o <b>Node Group</b> do Cluster EKS.
 
-63. Acesse o serviço [EKS](https://us-east-1.console.aws.amazon.com/eks/home?region=us-east-1#/clusters)
+64. Acesse o serviço [EKS](https://us-east-1.console.aws.amazon.com/eks/home?region=us-east-1#/clusters)
 
-![nginx](img/1.png)
+![](img/eks-01.png)
 
-64. Clique no cluster do lab `eks-lab`
+65. Clique no cluster do lab `eks-lab`
 
-![nginx](img/eks-destroy01.png)
+![](img/eks-41.png)
 
-65. Clique na aba <b>Compute</b>
+66. Clique na aba <b>Compute</b>
 
-![nginx](img/eks-destroy02.png)
+![](img/eks-42.png)
 
-66. Desça até <b>Node groups</b>, selecione o `lab-nodegroup` e clique em <b>Delete</b>
+67. Desça até <b>Node groups</b>, selecione o `eks-lab-node-group` e clique em <b>Delete</b>
 
-![nginx](img/eks-destroy03.png)
+![](img/eks-43.png)
 
-67. Por questão de segurança você precisa colocar o nome do node group para ter certeza que precisa deletar ele (isso evita a deleção acidental), depois clique em <b>Delete</b>!
+68. Por questão de segurança você precisa colocar o nome do node group para ter certeza que precisa deletar ele (isso evita a deleção acidental), depois clique em <b>Delete</b>!
 
-![nginx](img/eks-destroy05.png)
+![](img/eks-44.png)
 
-68. Agora basta esperar alguns minutos para realizar a deleção  
+69. Agora basta esperar alguns minutos para realizar a deleção  
 
-![nginx](img/eks-destroy06.png)
+![](img/eks-45.png)
 
-69. Pronto, após a deleção do node group, iremos realizar a deletar o Cluster, no cluster clique em <b>Delete cluster</b>.
+70. Pronto, após a deleção do node group, iremos realizar a deletar o Cluster, no cluster clique em <b>Delete cluster</b>.
 
-![nginx](img/eks-destroy07.png)
+![](img/eks-46.png)
 
-70. Para deletar coloque o nome do cluster <b>eks-lab</b> para confirmar a deleção, logo em seguida clique em <b>Delete</b>
+71. Para deletar coloque o nome do cluster <b>eks-lab</b> para confirmar a deleção, logo em seguida clique em <b>Delete</b>
 
-![nginx](img/eks-destroy08.png)
+![](img/eks-47.png)
 
-71. Após confirmar a deleção, o cluster será deletado em alguns minutos.
+72. Após confirmar a deleção, o cluster será deletado em alguns minutos.
 
-![nginx](img/eks-destroy09.png)
+![](img/eks-48.png)
 
 
 ### Conclusão
-Parabéns, você concluiu com sucesso este laboratório de hands-on de Kubernetes!
+Pronto, você acaba de concluir o laboratório de hands-on de EKS!
 
-Durante este laboratório, você aprendeu como criar um cluster Kubernetes usando o K3d e sobre os principais componentes que compõem um cluster Kubernetes. Você também aprendeu como criar um pod, deployment de uma aplicação, como escalar o ambiente, verificar os logs e até mesmo acessar um pod via SSH.
+Durante este laboratório, você aprendeu como criar um cluster EKS e alguns dos principais componentes que compõem um cluster Kubernetes. Você também aprendeu como criar um namespace, deployment, service do tipo load balancer e realizar o scaling e rollback de versão da app.
 
 Este conhecimento é fundamental para quem deseja entender e trabalhar com Kubernetes, uma das plataformas mais utilizadas no mundo para orquestração de containers. Esperamos que este laboratório tenha sido útil para você e que agora você se sinta mais confiante para trabalhar com Kubernetes em seu ambiente. Parabéns novamente e continue praticando!
-
-### Entregável
-
-Anexe o link do do loadbalancer na Atividade do Classroom.  
-Exemplo: http://a0d10f8234df541fc807413cb72fe8dc-844940680.us-east-1.elb.amazonaws.com/
